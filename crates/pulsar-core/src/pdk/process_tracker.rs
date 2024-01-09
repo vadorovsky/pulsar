@@ -1,8 +1,7 @@
 use std::collections::{BTreeMap, HashMap};
 
 use bpf_common::{
-    containers::{self, ContainerInfo},
-    parsing::procfs::{self, ProcfsError},
+    containers::{ContainerError, ContainerInfo},
     time::Timestamp,
     Pid,
 };
@@ -79,14 +78,6 @@ pub enum TrackerError {
     ProcessNotStartedYet,
     #[error("process exited")]
     ProcessExited,
-}
-
-#[derive(Debug, Error)]
-pub enum ContainerError {
-    #[error(transparent)]
-    Procfs(#[from] ProcfsError),
-    #[error(transparent)]
-    Container(#[from] containers::ContainerError),
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -262,9 +253,7 @@ impl ProcessTracker {
     }
 
     fn handle_container(&mut self, pid: Pid, namespaces: Namespaces) -> Result<(), ContainerError> {
-        let container_id = procfs::get_process_container_id(pid)?;
-        if let Some(id) = container_id {
-            let container_info = ContainerInfo::from_container_id(id)?;
+        if let Some(container_info) = ContainerInfo::from_pid(pid)? {
             self.containers.insert(namespaces, container_info);
         } else {
             log::warn!("could not determine a continer ID of a new containerized process {pid}");
