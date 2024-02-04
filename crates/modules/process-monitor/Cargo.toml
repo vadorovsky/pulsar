@@ -9,6 +9,7 @@ repository.workspace = true
 test-suite = [ "bpf-common/test-utils" ]
 
 [dependencies]
+aya = { workspace = true }
 bpf-common = { workspace = true }
 bpf-filtering = { workspace = true }
 pulsar-core = { workspace = true }

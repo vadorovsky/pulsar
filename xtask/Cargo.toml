@@ -7,6 +7,7 @@ repository.workspace = true
 
 [dependencies]
 anyhow = { workspace = true }
+aya-tool = { workspace = true }
 clap = { workspace = true, features = ["derive"] }
 num_cpus = { workspace = true }
 reqwest = { workspace = true, default-features = false, features = ["blocking", "json", "rustls-tls"] }

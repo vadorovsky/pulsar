@@ -18,4 +18,5 @@ nix = { workspace = true }
 dns-parser = { workspace = true }
 
 [build-dependencies]
+anyhow = { workspace = true }
 bpf-builder = { workspace = true }

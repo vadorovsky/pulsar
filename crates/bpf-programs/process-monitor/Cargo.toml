@@ -1,0 +1,29 @@
+[package]
+name = "process-monitor-bpf"
+version = "0.1.0"
+license = "GPL-3.0"
+edition = "2021"
+repository = "https://github.com/exein-io/pulsar"
+
+[dependencies]
+aya-bpf = { git = "https://github.com/aya-rs/aya", rev = "761e4ddbe3abf8b9177ebd6984465fe66696728a" }
+aya-log-ebpf = { git = "https://github.com/aya-rs/aya", rev = "761e4ddbe3abf8b9177ebd6984465fe66696728a" }
+process-monitor-events = { path = "../../events/process-monitor" }
+
+
+[build-dependencies]
+anyhow = "1.0"
+bpf-builder = { path = "../../bpf-builder" }
+
+[[bin]]
+name = "process-monitor"
+path = "src/main.rs"
+
+[profile.release]
+lto = true
+debug = 2
+panic = "abort"
+codegen-units = 1
+
+[workspace]
+members = []

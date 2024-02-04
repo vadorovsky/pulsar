@@ -50,6 +50,7 @@ sqlite3-vendored = ["bpf-common/sqlite3-vendored"]
 
 [workspace]
 members = [
+    "crates/events/process-monitor",
     "crates/modules/file-system-monitor",
     "crates/modules/process-monitor",
     "crates/modules/network-monitor",

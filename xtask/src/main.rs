@@ -2,6 +2,7 @@ use clap::Parser;
 use run::run_with_sudo;
 use signal_hook::{consts::TERM_SIGNALS, iterator::Signals};
 
+mod codegen;
 mod cross;
 mod run;
 mod vmlinux;
@@ -27,6 +28,8 @@ enum Command {
     Cross(cross::Options),
     /// Build headers with BTF type definitions.
     Vmlinux(vmlinux::Options),
+    /// Generate kernel types for Rust eBPF programs
+    Codegen,
 }
 
 fn main() {
@@ -42,6 +45,7 @@ fn main() {
         Command::Test(opts) => run_with_sudo("test-suite", &[], opts),
         Command::Cross(opts) => cross::run(opts),
         Command::Vmlinux(opts) => vmlinux::run(opts),
+        Command::Codegen => codegen::run(),
     };
 
     if let Err(e) = ret {

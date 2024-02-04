@@ -1,0 +1,12 @@
+[package]
+name = "process-monitor-events"
+version.workspace = true
+license.workspace = true
+edition.workspace = true
+repository.workspace = true
+
+[dependencies]
+aya-bpf-cty = { git = "https://github.com/aya-rs/aya" }
+
+[lib]
+path = "src/lib.rs"

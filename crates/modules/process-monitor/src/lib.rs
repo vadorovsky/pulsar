@@ -1,4 +1,5 @@
 use anyhow::Context;
+use aya::include_bytes_aligned;
 use bpf_common::{
     containers::ContainerError,
     ebpf_program,
@@ -16,18 +17,14 @@ pub async fn program(
     ctx: BpfContext,
     sender: impl BpfSender<ProcessEvent>,
 ) -> Result<Program, ProgramError> {
-    let binary = ebpf_program!(&ctx, "probes");
-    let mut program = ProgramBuilder::new(ctx, MODULE_NAME, binary)
-        .raw_tracepoint("sched_process_exec")
-        .raw_tracepoint("sched_process_exit")
-        .raw_tracepoint("sched_process_fork")
-        .raw_tracepoint("sched_switch")
-        .raw_tracepoint("cgroup_mkdir")
-        .raw_tracepoint("cgroup_rmdir")
-        .raw_tracepoint("cgroup_attach_task")
+    let binary = include_bytes_aligned!(
+        "../../../bpf-programs/process-monitor/target/bpfel-unknown-none/release/process-monitor"
+    );
+    let mut program = ProgramBuilder::new(ctx, MODULE_NAME, binary.to_vec())
+        .kprobe("security_task_alloc")
+        // .raw_tracepoint("sched_process_exit")
         .start()
         .await?;
-
     program
         .read_events("map_output_process_event", sender)
         .await?;

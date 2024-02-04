@@ -1,3 +1,5 @@
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+use anyhow::Result;
+
+fn main() -> Result<()> {
     bpf_builder::build("probes", "probes.bpf.c")
 }

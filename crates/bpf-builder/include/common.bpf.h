@@ -7,11 +7,13 @@
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_tracing.h>
 
+#ifndef SHIM
 #define LOG_LEVEL_NONE 0
 #define LOG_LEVEL_ERROR 1
 #define LOG_LEVEL_DEBUG 2
 const volatile int log_level = 0;
 const volatile int LINUX_KERNEL_VERSION;
+#endif
 
 // NOTE: bpf_printk supports up to 3 arguments, while these LOG_ macros
 // allow only up to 2 arguments since one is used by the probe name.

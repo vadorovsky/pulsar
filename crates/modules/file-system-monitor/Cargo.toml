@@ -17,4 +17,5 @@ tokio = { workspace = true, features = ["full"] }
 log = { workspace = true }
 
 [build-dependencies]
+anyhow = { workspace = true }
 bpf-builder = { workspace = true }
