@@ -27,4 +27,5 @@ cgroups-rs = { workspace = true, optional = true }
 lazy_static = { workspace = true }
 
 [build-dependencies]
+anyhow = { workspace = true }
 bpf-builder = { workspace = true }
