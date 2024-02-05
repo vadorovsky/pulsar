@@ -24,7 +24,7 @@ file-system-monitor = { workspace = true, optional = true }
 logger = { workspace = true, optional = true }
 network-monitor = { workspace = true, optional = true }
 process-monitor = { workspace = true, optional = true }
-rules-engine = { workspace = true, optional = true }
+rules-engine = { workspace = true }
 smtp-notifier = { workspace = true, optional = true }
 # External
 anyhow = { workspace = true }
@@ -43,7 +43,7 @@ tokio = { workspace = true, features = ["full"] }
 default = ["full"]
 full = ["core", "extra"]
 core = ["logger", "process-monitor", "network-monitor", "file-system-monitor"]
-extra = ["rules-engine", "desktop-notifier", "smtp-notifier"]
+extra = ["desktop-notifier", "smtp-notifier"]
 all-vendored = ["openssl-vendored", "sqlite3-vendored"]
 openssl-vendored = ["smtp-notifier?/openssl-vendored"]
 sqlite3-vendored = ["bpf-common/sqlite3-vendored"]

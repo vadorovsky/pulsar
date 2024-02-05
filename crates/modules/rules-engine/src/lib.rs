@@ -6,8 +6,8 @@ use pulsar_core::pdk::{
     Version,
 };
 
-mod dsl;
-mod engine;
+pub mod dsl;
+pub mod engine;
 
 pub use engine::RuleEngineData;
 

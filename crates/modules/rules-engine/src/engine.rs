@@ -15,9 +15,9 @@ const RULE_EXTENSION: &str = "yaml";
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UserRule {
-    name: String,
-    r#type: String,
-    condition: String,
+    pub name: String,
+    pub r#type: String,
+    pub condition: String,
 }
 
 /// Describes Pulsar Engine error.
@@ -137,7 +137,7 @@ fn parse_rules(
     Ok(m)
 }
 
-fn parse_rule(
+pub fn parse_rule(
     parser: &dsl::dsl::ConditionParser,
     user_rule: UserRule,
 ) -> Result<(PayloadDiscriminant, Rule), PulsarEngineError> {

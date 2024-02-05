@@ -69,6 +69,11 @@ pub struct Monitor {
     /// Show all events
     #[clap(long, default_value_t = false)]
     pub all: bool,
+    /// Filter type.
+    #[clap(long)]
+    pub filter_type: Option<String>,
+    #[clap(long)]
+    pub filter_condition: Option<String>,
 }
 
 fn parse_mc_key_value(input: &str) -> Result<ModuleConfigKV> {

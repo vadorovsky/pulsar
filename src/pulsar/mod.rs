@@ -1,6 +1,11 @@
 use anyhow::{Context, Result};
 use engine_api::client::EngineApiClient;
 use futures_util::StreamExt;
+use pulsar_core::pdk::Event;
+use rules_engine::{
+    dsl,
+    engine::{parse_rule, UserRule},
+};
 
 mod term_print;
 
@@ -56,13 +61,53 @@ pub async fn pulsar_cli_run(options: &PulsarCliOpts) -> Result<()> {
             }
             _ => unreachable!(),
         },
-        Commands::Monitor(Monitor { all }) => {
+        Commands::Monitor(Monitor {
+            all,
+            filter_type,
+            filter_condition,
+        }) => {
+            let rule = match filter_type {
+                Some(filter_type) => match filter_condition {
+                    Some(filter_condition) => {
+                        let parser = dsl::dsl::ConditionParser::new();
+                        let (_discriminant, rule) = parse_rule(
+                            &parser,
+                            // TODO(vadorovsky): Provide some other API for creating ad-hoc rules.
+                            UserRule {
+                                name: "".to_owned(),
+                                r#type: filter_type.to_owned(),
+                                condition: filter_condition.to_owned(),
+                            },
+                        )?;
+                        let rule = rule.compile::<Event>()?;
+                        Some(rule)
+                    }
+                    None => {
+                        return Err(anyhow::anyhow!(
+                            "--filter-condition is required when --filter-type is provided"
+                        ))
+                    }
+                },
+                None => {
+                    if filter_condition.is_some() {
+                        return Err(anyhow::anyhow!(
+                            "--filter-type is required when --filter-condition is provided"
+                        ));
+                    }
+                    None
+                }
+            };
+
             let mut stream = engine_api_client.event_monitor().await?;
 
             while let Some(ws_read) = stream.next().await {
                 match ws_read {
                     Ok(event) => {
-                        if *all || event.header().threat.is_some() {
+                        if let Some(ref rule) = rule {
+                            if rule.is_match(&event) {
+                                println!("{:#}", event);
+                            }
+                        } else if *all || event.header().threat.is_some() {
                             println!("{:#}", event);
                         }
                     }
